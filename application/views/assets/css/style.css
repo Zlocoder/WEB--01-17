@@ -1,0 +1,19 @@
+.login-box .forget-password {
+    line-height: 34px;
+}
+
+.navbar-nav > .user-menu > .dropdown-menu > li.user-header {
+    height: auto;
+}
+
+.form-inline .form-group {
+    margin-right: 20px;
+}
+
+.form-inline .form-group label {
+    margin-right: 5px;
+}
+
+.form-inline .buttons {
+    float: right;
+}
