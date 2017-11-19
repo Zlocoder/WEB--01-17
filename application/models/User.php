@@ -14,6 +14,8 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
     const ACTIVE = 1;
 
     public function init() {
+        parent::init();
+
         if (!$this->role) {
             $this->role = self::ROLE_GUEST;
         }
@@ -42,7 +44,8 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
                     ['in', 'range' => [self::ROLE_USER, self::ROLE_SUPPORT, self::ROLE_ADMIN]]
                 ],
                 'active' => [
-                    'boolean',
+                    'required',
+                    'boolean'
                 ],
                 'created' => ['required']
             ],
