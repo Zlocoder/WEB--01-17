@@ -42,6 +42,16 @@ class UserForm extends \app\classes\Model {
         ];
     }
 
+    public function attributeLabels() {
+        return [
+            'login' => 'Логин',
+            'email' => 'Email',
+            'password' => 'Пароль',
+            'role' => 'Группа',
+            'active' => 'Активный'
+        ];
+    }
+
     private $_user;
 
     public function setUser($user) {
