@@ -30,4 +30,7 @@ class Activatable extends \yii\behaviors\AttributeBehavior {
         return $this->owner;
     }
 
+    public function getValue($event) {
+        return $this->owner->{$this->attribute} ?: $this->defaultState;
+    }
 }
