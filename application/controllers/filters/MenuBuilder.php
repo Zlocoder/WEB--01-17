@@ -19,6 +19,11 @@ class MenuBuilder extends \yii\base\ActionFilter {
             $menu[] = ['label' => 'Компании', 'url' => ['companies/index'], 'icon' => 'building-o'];
         }
 
+        if ($user->can('tariffs/index')) {
+            $menu[] = ['label' => 'Тарифы', 'url' => ['tariffs/index'], 'icon' => 'list-ul'];
+        }
+
+
 
         \Yii::$app->view->params['menu'] = $menu;
 

@@ -12,5 +12,11 @@ return [
     'users/toggle' => ['admin'],
     'users/delete' => [],
 
-    'companies/index' => ['admin']
+    'companies/index' => ['admin'],
+
+    'tariffs/index' => ['client'],
+    'tariffs/create' => ['client'],
+    'tariffs/update' => ['client'],
+    'tariffs/toggle' => ['client'],
+    'tariffs/delete' => ['client'],
 ];
