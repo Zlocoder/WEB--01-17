@@ -15,7 +15,9 @@ class Asset extends \yii\web\AssetBundle
         'css/style.css'
     ];
 
-    public $js = [];
+    public $js = [
+        'js/app.js'
+    ];
 
     public $depends = [
         'app\assets\Adminlte'

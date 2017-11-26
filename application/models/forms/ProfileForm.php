@@ -61,26 +61,22 @@ class ProfileForm extends \app\classes\Model {
         return isset($this->oldPassword);
     }
 
-    public function process() {
-        if ($this->validate()) {
-            \Yii::$app->user->identity->email = $this->email;
+    public function onProcess() {
+        \Yii::$app->user->identity->email = $this->email;
 
-            if ($this->isChangePassword()) {
-                if (!\Yii::$app->security->validatePassword($this->oldPassword, \Yii::$app->user->password)) {
-                    $this->addError('oldPassword', 'Неверный пароль');
-                    return false;
-                }
-
-                \Yii::$app->user->identity->password = \Yii::$app->security->generatePasswordHash($this->newPassword);
+        if ($this->isChangePassword()) {
+            if (!\Yii::$app->security->validatePassword($this->oldPassword, \Yii::$app->user->password)) {
+                $this->addError('oldPassword', 'Неверный пароль');
+                return false;
             }
 
-            if (!\Yii::$app->user->identity->save(false)) {
-                throw new \Exception('Can not update user profile');
-            }
-
-            return true;
+            \Yii::$app->user->identity->password = \Yii::$app->security->generatePasswordHash($this->newPassword);
         }
 
-        return false;
+        if (!\Yii::$app->user->identity->save(false)) {
+            throw new \Exception('Can not update user profile');
+        }
+
+        return true;
     }
 }
