@@ -28,7 +28,8 @@ class Company extends \app\classes\ActiveRecord {
     public function attributeLabels() {
         return [
             'userId' => 'Пользователь',
-            'name' => 'Название'
+            'name' => 'Название',
+            'created' => 'Дата создания'
         ];
     }
 
