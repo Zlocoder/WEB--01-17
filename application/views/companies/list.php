@@ -18,14 +18,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Компании'];
 
 <div class="row">
     <div class="col-xs-12">
-        <?php Box::begin([
-            'type' => 'primary',
-            'header' => ButtonList::widget([
-                'items' => [
-                    ['label' => 'Добавить', 'url' => ['users/create'], 'icon' => 'user-plus', 'options' => ['class' => 'btn-flat btn-success']]
-                ]
-            ])
-        ]) ?>
+        <?php Box::begin(['type' => 'primary']) ?>
 
         <?= GridView::widget([
             'dataProvider' => $provider,
