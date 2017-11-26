@@ -35,4 +35,23 @@ class Model extends \yii\base\Model {
 
         return $validators;
     }
+
+    public function process($data, $scope = null) {
+        $this->load($data, $scope);
+        $this->validate();
+
+        if (!$this->hasErrors()) {
+            if ($this->scenario && method_exists($this, 'onProcess' . ucfirst($this->scenario))) {
+                return call_user_func([$this, 'onProcess' . ucfirst($this->scenario)]);
+            }
+
+            return $this->onProcess();
+        }
+
+        return false;
+    }
+
+    public function onProcess() {
+        return true;
+    }
 }

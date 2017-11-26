@@ -6,14 +6,29 @@
     height: auto;
 }
 
+.content-header .breadcrumb {
+    float: none;
+    position: static;
+}
+
+.content h1 {
+    margin: 10px 0;
+}
+
+.row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.row.with-border {
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.box-body .row {
+    padding-bottom: 20px;
+}
+
 .form-inline .form-group {
-    margin-right: 20px;
-}
-
-.form-inline .form-group label {
-    margin-right: 5px;
-}
-
-.form-inline .buttons {
-    float: right;
+    padding-left: 15px;
+    padding-right: 15px;
 }

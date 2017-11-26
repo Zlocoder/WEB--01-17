@@ -13,18 +13,14 @@ class AuthController extends \app\classes\Controller {
     public $layout = 'auth';
 
     public function actionLogin() {
-        $model = new LoginForm();
+        try {
+            $model = new LoginForm();
 
-        if ($this->request->isPost) {
-            $model->load($this->request->post());
-
-            try {
-                if ($model->process()) {
-                    return $this->goBack();
-                }
-            } catch (\Exception $error) {
-                $this->session->setFlash('error', $error->getMessage());
+            if ($this->request->isPost && $model->process($this->request->post())) {
+                return $this->goBack();
             }
+        } catch (\Exception $error) {
+            $this->session->setFlash('error', $error->getMessage());
         }
 
         return $this->render('login', compact('model'));
@@ -37,20 +33,18 @@ class AuthController extends \app\classes\Controller {
     }
 
     public function actionForgetPassword() {
-        $model = new ForgetPasswordForm();
+        try {
+            $model = new ForgetPasswordForm();
 
-        if ($this->request->isPost) {
-            $model->load($this->request->post());
-
-            try {
-                if ($model->process()) {
+            if ($this->request->isPost) {
+                if ($model->process($this->request->post())) {
                     $this->session->setFlash('success', 'Новый пароль отправлен на вашу почту.');
 
                     return $this->redirect(['login']);
                 }
-            } catch (\Exception $error) {
-                $this->session->setFlash('error', $error->getMessage());
             }
+        } catch (\Exception $error) {
+            $this->session->setFlash('error', $error->getMessage());
         }
 
         return $this->render('forget-password', compact('model'));

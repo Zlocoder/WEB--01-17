@@ -14,8 +14,8 @@ class ActiveRecord extends \yii\db\ActiveRecord {
         'updatedAtAttribute' => false
     ];
 
-    protected static $activatable = [
-        'class' => 'app\models\behaviors\Activatable'
+    protected static $activity = [
+        'class' => 'app\models\behaviors\ActivityBehavior'
     ];
 
     public static function tableName() {
@@ -35,10 +35,10 @@ class ActiveRecord extends \yii\db\ActiveRecord {
             $this->attachBehavior('timestamp', $timestamp);
         }
 
-        if (static::$activatable) {
-            $activatable = array_merge(self::$activatable, static::$activatable);
+        if (static::$activity) {
+            $activity = array_merge(self::$activity, static::$activity);
 
-            $this->attachBehavior('activatable', $activatable);
+            $this->attachBehavior('activity', $activity);
         }
     }
 

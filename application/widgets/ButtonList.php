@@ -15,7 +15,7 @@ class ButtonList extends \yii\bootstrap\Nav {
                 continue;
             }
 
-            if (isset($item['url']) && is_array($item['url']) && !\Yii::$app->user->can($item['url'][0], array_slice($item['url'], 1))) {
+            if (isset($item['url']) && is_array($item['url']) && !\Yii::$app->user->can($item['url'][0], array_slice($item['url'], 1, null, true))) {
                 continue;
             }
 

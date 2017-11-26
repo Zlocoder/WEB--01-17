@@ -5,11 +5,11 @@ namespace app\controllers\filters;
 use yii\web\ForbiddenHttpException;
 
 class AccessChecker extends \yii\base\ActionFilter {
-    public $modelActions = [];
+    public $modelRequired = [];
 
     public function beforeAction($action) {
-        if (in_array($action->id, $this->modelActions)) {
-            $result = \Yii::$app->user->can(\Yii::$app->requestedRoute ?: \Yii::$app->defaultRoute, [$this->owner->model]);
+        if (in_array($action->id, $this->modelRequired)) {
+            $result = \Yii::$app->user->can(\Yii::$app->requestedRoute ?: \Yii::$app->defaultRoute, [$this->owner->model->id]);
         } else {
             $result = \Yii::$app->user->can(\Yii::$app->requestedRoute ?: \Yii::$app->defaultRoute);
         }

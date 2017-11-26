@@ -29,20 +29,18 @@ class LoginForm extends \app\classes\Model {
         ];
     }
 
-    public function process() {
-        if ($this->validate()) {
-            if ($user = User::findOne(['email' => $this->email])) {
-                if (\Yii::$app->security->validatePassword($this->password, $user->password)) {
-                    if (!\Yii::$app->user->login($user)) {
-                        throw new \Exception('Can not login user');
-                    }
-
-                    return true;
+    public function onProcess() {
+        if ($user = User::findOne(['email' => $this->email, 'activity' => 1])) {
+            if (\Yii::$app->security->validatePassword($this->password, $user->password)) {
+                if (!\Yii::$app->user->login($user)) {
+                    throw new \Exception('Can not login user');
                 }
-            }
 
-            $this->addError('password', 'Неверный email или пароль');
+                return true;
+            }
         }
+
+        $this->addError('password', 'Неверный email или пароль');
 
         return false;
     }
