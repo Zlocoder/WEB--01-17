@@ -6,18 +6,21 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
     protected static $tableName = 'users';
 
     const ROLE_GUEST = 'guest';
-    const ROLE_USER = 'user';
-    const ROLE_SUPPORT = 'support';
+    const ROLE_CLIENT = 'client';
     const ROLE_ADMIN = 'admin';
 
-    const INACTIVE = 0;
-    const ACTIVE = 1;
+    const STATE_INACTIVE = 0;
+    const STATE_ACTIVE = 1;
 
     public function init() {
         parent::init();
 
         if (!$this->role) {
             $this->role = self::ROLE_GUEST;
+        }
+
+        if ($this->activity === null) {
+            $this->activity = self::STATE_ACTIVE;
         }
     }
 
@@ -41,15 +44,17 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
                 ],
                 'role' => [
                     'required',
-                    ['in', 'range' => [self::ROLE_USER, self::ROLE_SUPPORT, self::ROLE_ADMIN]]
+                    ['in', 'range' => self::roleKeys()]
                 ],
-                'active' => [
+                'activity' => [
                     'required',
                     'boolean'
                 ],
-                'created' => ['required']
+                'created' => [
+                    'required'
+                ]
             ],
-            'safe' => ['login', 'email', 'password', 'role', 'active', 'created']
+            'safe' => ['login', 'email', 'password', 'role', 'activity', 'created']
         ];
     }
 
@@ -59,7 +64,7 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
             'email' => 'Email',
             'password' => 'Пароль',
             'role' => 'Группа',
-            'active' => 'Активный',
+            'activity' => 'Активный',
             'created' => 'Добавлен'
         ];
     }
@@ -87,8 +92,7 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
     public function getRoleText() {
         switch ($this->role) {
             case self::ROLE_GUEST : return 'Гость';
-            case self::ROLE_USER : return 'Пользователь';
-            case self::ROLE_SUPPORT : return 'Потдержка';
+            case self::ROLE_CLIENT : return 'Клиент';
             case self::ROLE_ADMIN : return 'Администратор';
         }
 
@@ -97,19 +101,12 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
 
     public static function roleOptions() {
         return [
-            self::ROLE_USER => 'Пользователь',
-            self::ROLE_SUPPORT => 'Потдержка',
+            self::ROLE_CLIENT => 'Клиент',
             self::ROLE_ADMIN => 'Администратор',
         ];
     }
 
-    public static function find($activeOnly = true) {
-        $query = parent::find();
-
-        if ($activeOnly) {
-            $query->where(['active' => 1]);
-        }
-
-        return $query;
+    public static function roleKeys() {
+        return [self::ROLE_CLIENT, self::ROLE_ADMIN];
     }
 }

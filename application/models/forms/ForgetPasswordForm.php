@@ -2,6 +2,8 @@
 
 namespace app\models\forms;
 
+use app\models\User;
+
 class ForgetPasswordForm extends \app\classes\Model {
     public $email;
 
@@ -24,11 +26,30 @@ class ForgetPasswordForm extends \app\classes\Model {
         ];
     }
 
-    public function process() {
-        if ($this->validate()) {
-            return true;
-        }
+    public function onProcess() {
+        $user = User::findOne(['email' => $this->email]);
+        $transaction = \Yii::$app->db->beginTransaction();
 
-        return false;
+        try {
+            $password = \Yii::$app->security->generateRandomString();
+            $user->password = \Yii::$app->security->generatePasswordHash($password);
+            if (!$user->save(false)) {
+                throw new \Exception('Не удалось изменить пароль');
+            }
+
+            $mail = \Yii::$app->mailer->compose('forget-password')
+                ->setFrom(\Yii::$app->params['systemEmail'])
+                ->setSubject('Восстановление пароля');
+
+            if (!$mail->send()) {
+                throw new \Exception('Не удалось отправить письмо');
+            }
+
+            $transaction->commit();
+            return true;
+        } catch (\Exception $error) {
+            $transaction->rollBack();
+            throw $error;
+        }
     }
 }

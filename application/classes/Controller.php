@@ -2,9 +2,12 @@
 
 namespace app\classes;
 
+use yii\web\NotFoundHttpException;
+
 class Controller extends \yii\web\Controller {
     protected static $accessChecker = [
-        'class' => 'app\controllers\filters\AccessChecker'
+        'class' => 'app\controllers\filters\AccessChecker',
+        'modelRequired' => ['toggle', 'view', 'update', 'delete']
     ];
 
     protected static $menuBuilder = [
@@ -12,7 +15,8 @@ class Controller extends \yii\web\Controller {
     ];
 
     protected static $backUrlSetter = [
-        'class' => 'app\controllers\filters\BackUrlSetter'
+        'class' => 'app\controllers\filters\BackUrlSetter',
+        'only' => ['index']
     ];
 
     public function init() {
@@ -41,5 +45,20 @@ class Controller extends \yii\web\Controller {
         }
 
         return parent::__get($name);
+    }
+
+    public $modelClass;
+    protected $_model;
+
+    public function getModel() {
+        if (!$this->_model) {
+            if ($id = $this->request->get('id')) {
+                if (!$this->_model = call_user_func_array([$this->modelClass, 'findOne'], [$id])) {
+                    throw new NotFoundHttpException('Model not found');
+                }
+            }
+        }
+
+        return $this->_model;
     }
 }

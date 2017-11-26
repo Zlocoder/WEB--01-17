@@ -8,90 +8,86 @@
 
 use app\widgets\Box;
 use app\widgets\ButtonList;
+use app\widgets\GridView;
 use yii\bootstrap\ActiveForm;
-use yii\grid\GridView;
+use app\models\User;
 
 $this->title = 'Пользователи';
 $this->params['breadcrumbs'][] = ['label' => 'Пользователи'];
 ?>
 
+<h1>Пользователи</h1>
+
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-12">
         <?php $form = ActiveForm::begin([
             'method' => 'get',
             'layout' => 'inline',
             'fieldConfig' => [
                 'labelOptions' => [
                     'class' => ''
+                ],
+                'options' => [
+                    'class' => 'form-group form-group-sm'
                 ]
             ],
-            'enableClientValidation' => false
+            'enableClientValidation' => false,
+            'options' => [
+                'class' => 'filter'
+            ]
         ]) ?>
 
             <?php Box::begin([
-                'header' => 'Фильтр пользователей',
-                'expandable' => !$filterActive,
-                'collapsable' => $filterActive,
-                'type' => $filterActive ? $filter->errors ? 'danger' : 'primary' : 'default'
+                'type' => 'primary',
+                'header' => ButtonList::widget([
+                    'items' => [
+                        ['label' => 'Добавить', 'url' => ['users/create'], 'icon' => 'user-plus', 'options' => ['class' => 'btn-flat btn-success']]
+                    ]
+                ])
             ]) ?>
+                <div class="row with-border">
+                    <?= $form->field($filter, 'role')->label('')->widget('app\widgets\SubmitGroup', [
+                        'defaultButton' => true,
+                        'items' => User::roleOptions(),
+                        'submitOptions' => [
+                            'class' => 'btn-sm'
+                        ]
+                    ]) ?>
+
                     <?= $form->field($filter, 'login') ?>
 
                     <?= $form->field($filter, 'email') ?>
 
-                    <?= $form->field($filter, 'role')->dropDownList(\app\models\User::roleOptions(), ['prompt' => '']) ?>
-
-                    <div class="buttons">
-                        <button type="submit" class="btn btn-flat btn-primary">Применить</button>
-
-                        <?php if ($filterReset) { ?>
-                            <a class="btn btn-flat btn-default" href="<?= $filterReset ?>">Сбросить</a>
-                        <?php } else { ?>
-                            <button class="btn btn-flat btn-default">Сбросить</button>
-                        <?php } ?>
-                    </div>
-            <?php Box::end() ?>
-        <?php $form->end(); ?>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12">
-        <?php Box::begin([
-            'type' => 'primary',
-            'header' => ButtonList::widget([
-                'items' => [
-                    ['label' => 'Добавить', 'url' => ['users/create'], 'icon' => 'user-plus', 'options' => ['class' => 'btn-flat btn-success']]
-                ]
-            ])
-        ]) ?>
-            <?= GridView::widget([
-                'dataProvider' => $filter->provider,
-                'columns' => [
-                    'login',
-                    'email',
-                    [
-                        'attribute' => 'role',
-                        'value' => 'roleText'
-                    ],
-                    'created',
-                    [
-                        'class' => 'yii\grid\ActionColumn',
-                        'template' => '{view} {update}',
-                        'visibleButtons' => [
-                            'view' => function($model) {
-                                return \Yii::$app->user->can('users/view', ['id' => $model->id]);
-                            },
-                            'update' => function($model) {
-                                return \Yii::$app->user->can('users/update', ['id' => $model->id]);
-                            },
-                            'delete' => function($model) {
-                                return \Yii::$app->user->can('users/delete', ['id' => $model->id]);
-                            }
+                    <?= $form->field($filter, 'activity')->label('')->widget('app\widgets\SubmitGroup', [
+                        'items' => [
+                            User::STATE_ACTIVE => 'Активные',
+                            User::STATE_INACTIVE => 'Неактивные'
+                        ],
+                        'submitOptions' => [
+                            'class' => 'btn-sm'
                         ]
+                    ]) ?>
+
+                    <div class="form-group pull-right">
+                        <a class="btn btn-flat btn-sm btn-default" href="<?= $filterReset ?>">Сбросить</a>
+                    </div>
+                </div>
+
+                <?= GridView::widget([
+                    'dataProvider' => $filter->provider,
+                    'columns' => [
+                        'login',
+                        'email',
+                        [
+                            'attribute' => 'role',
+                            'value' => 'roleText'
+                        ],
+                        'created',
+                        ['class' => 'app\widgets\ActionColumn']
                     ]
-                ]
-            ]) ?>
-        <?php Box::end(); ?>
+                ]) ?>
+            <?php Box::end(); ?>
+        <?php $form->end(); ?>
     </div>
 </div>
 

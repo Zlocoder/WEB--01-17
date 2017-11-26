@@ -1,23 +1,14 @@
 <?php
 
 return [
-    'dashboard/index' => ['user', 'support', 'admin'],
-    'profile/index' => ['user', 'support', 'admin'],
-    'users/index' => ['support', 'admin'],
-    'users/create' => ['support', 'admin'],
-    'users/view' => ['support', 'admin'],
-    'users/update' => ['support', 'admin'],
-    'users/update-role' => ['admin'],
-    'users/update-activity' => ['admin', 'support' => function($id = null) {
-        if ($id) {
-            if ($user = \app\models\User::findOne($id)) {
-                return $user->role == \app\models\User::ROLE_USER;
-            }
+    'dashboard/index' => ['admin', 'client'],
 
-            throw new \Exception('User not found');
-        }
+    'profile/index' => ['admin', 'client'],
 
-        return true;
-    }],
-    'users/delete' => []
+    'users/index' => ['admin'],
+    'users/create' => ['admin'],
+    'users/view' => ['admin'],
+    'users/update' => ['admin'],
+    'users/toggle' => ['admin'],
+    'users/delete' => [],
 ];

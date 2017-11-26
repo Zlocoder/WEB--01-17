@@ -102,8 +102,6 @@ app\assets\Asset::register($this);
 
     <div class="content-wrapper">
         <section class="content-header">
-            <h1><?= Html::encode(isset($this->params['h1']) ? $this->params['h1'] : $this->title) ?></h1>
-
             <?php if (isset($this->params['breadcrumbs'])): ?>
                 <?= \yii\widgets\Breadcrumbs::widget([
                         'encodeLabels' => false,
