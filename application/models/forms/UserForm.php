@@ -108,8 +108,26 @@ class UserForm extends \app\classes\Model {
         $this->_user->role = $this->role;
         $this->_user->activity = $this->activity;
 
-        if (!$this->_user->save(false)) {
-            throw new \Exception('Can not create user');
+        $mail = \Yii::$app->mailer->compose('new-password', ['password' => $this->password]);
+        $mail->setFrom(\Yii::$app->params['systemEmail']);
+        $mail->setTo($this->email);
+        $mail->setSubject('Новый пароль');
+
+        $transaction = \Yii::$app->db->beginTransaction();
+
+        try {
+            if (!$this->_user->save(false)) {
+                throw new \Exception('Can not create user');
+            }
+
+            if (!$mail->send()) {
+                throw new \Exception('Can not send email');
+            }
+
+            $transaction->commit();
+        } catch (\Exception $error) {
+            $transaction->rollBack();
+            throw $error;
         }
 
         return true;
