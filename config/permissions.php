@@ -11,4 +11,6 @@ return [
     'users/update' => ['admin'],
     'users/toggle' => ['admin'],
     'users/delete' => [],
+
+    'companies/index' => ['admin']
 ];
