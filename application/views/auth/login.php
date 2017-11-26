@@ -18,6 +18,12 @@ use yii\helpers\Url;
 
     <div class="row">
         <div class="col-xs-8">
+            <a href="<?= Url::to(['registration']) ?>" class="forget-password">Регистрация</a><br>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-8">
             <a href="<?= Url::to(['forget-password']) ?>" class="forget-password">Забыл пароль</a><br>
         </div>
         <div class="col-xs-4">
