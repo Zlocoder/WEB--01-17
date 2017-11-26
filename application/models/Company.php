@@ -36,4 +36,8 @@ class Company extends \app\classes\ActiveRecord {
     public function getUser() {
         return $this->hasOne('app\models\User', ['id' => 'userId']);
     }
+
+    public function getTariffs() {
+        return $this->hasMany('app\models\Tariff', ['companyId' => 'id']);
+    }
 }

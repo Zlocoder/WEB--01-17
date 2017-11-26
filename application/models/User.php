@@ -113,4 +113,8 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
     public function getCompany() {
         return $this->hasOne('app\models\Company', ['userId' => 'id']);
     }
+
+    public function getTariffs() {
+        return $this->hasMany('app\models\Tariff', ['companyId' => 'id'])->via('company');
+    }
 }
