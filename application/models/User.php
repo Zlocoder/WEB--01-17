@@ -109,4 +109,8 @@ class User extends \app\classes\ActiveRecord implements \yii\web\IdentityInterfa
     public static function roleKeys() {
         return [self::ROLE_CLIENT, self::ROLE_ADMIN];
     }
+
+    public function getCompany() {
+        return $this->hasOne('app\models\Company', ['userId' => 'id']);
+    }
 }

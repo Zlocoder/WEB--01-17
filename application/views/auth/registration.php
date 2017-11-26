@@ -20,6 +20,8 @@ use yii\helpers\Url;
 
 <?= $form->field($model, 'confirm')->passwordInput() ?>
 
+<?= $form->field($model, 'company') ?>
+
 <div class="row">
     <div class="col-xs-12 text-right">
         <button type="submit" class="btn btn-primary btn-block btn-flat">Зарегистрироваться</button>

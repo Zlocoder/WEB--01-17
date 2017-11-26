@@ -2,6 +2,7 @@
 
 namespace app\models\forms;
 
+use app\models\Company;
 use app\models\User;
 
 class RegistrationForm extends \app\classes\Model {
@@ -9,6 +10,7 @@ class RegistrationForm extends \app\classes\Model {
     public $email;
     public $password;
     public $confirm;
+    public $company;
 
     public function rules() {
         return [
@@ -32,6 +34,12 @@ class RegistrationForm extends \app\classes\Model {
                 'confirm' => [
                     ['required', 'message' => 'Подтвердите пароль'],
                     ['compare', 'compareAttribute' => 'password', 'message' => 'пароли не совпадают']
+                ],
+                'company' => [
+                    ['required', 'message' => 'Введите название компании'],
+                    ['string', 'length' => [3, 50], 'tooShort' => 'В строке должно быть не меньше 3 символов', 'tooLong' => 'В строке должно быть не больше 50 символов'],
+                    ['match', 'pattern' => '/^[A-ZА-Я0-9 -]*$/ui', 'message' => 'Название компании содержит недопустимые символы'],
+                    ['unique', 'targetClass' => 'app\models\Company', 'targetAttribute' => 'name', 'message' => 'Такая компания уже зарегистрирована'],
                 ]
             ]
         ];
@@ -43,6 +51,7 @@ class RegistrationForm extends \app\classes\Model {
             'email' => 'Email',
             'password' => 'Пароль',
             'confirm' => 'Подтверждение пароля',
+            'company' => 'Название компании'
         ];
     }
 
@@ -55,6 +64,10 @@ class RegistrationForm extends \app\classes\Model {
             'role' => User::ROLE_CLIENT
         ]);
 
+        $company = new Company([
+            'name' => $this->company
+        ]);
+
         $mail = \Yii::$app->mailer->compose('new-password', ['password' => $this->password]);
         $mail->setFrom(\Yii::$app->params['systemEmail']);
         $mail->setTo($this->email);
@@ -65,6 +78,11 @@ class RegistrationForm extends \app\classes\Model {
         try {
             if (!$user->save(false)) {
                 throw new \Exception('Can not registrate user');
+            }
+
+            $company->userId = $user->id;
+            if (!$company->save(false)) {
+                throw new \Exception('Can not create company');
             }
 
             if (!$mail->send()) {
