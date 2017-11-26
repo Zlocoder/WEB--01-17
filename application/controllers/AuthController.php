@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\forms\ForgetPasswordForm;
 use app\models\forms\LoginForm;
+use app\models\forms\RegistrationForm;
 
 class AuthController extends \app\classes\Controller {
     protected static $accessChecker = false;
@@ -48,5 +49,19 @@ class AuthController extends \app\classes\Controller {
         }
 
         return $this->render('forget-password', compact('model'));
+    }
+
+    public function actionRegistration() {
+        $model = new RegistrationForm();
+
+        try {
+            if ($this->request->isPost && $model->process($this->request->post())) {
+                return $this->goBack();
+            }
+        } catch (\Exception $error) {
+            $this->session->setFlash('error', $error->getMessage());
+        }
+
+        return $this->render('registration', compact('model'));
     }
 }

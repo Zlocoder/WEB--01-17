@@ -28,7 +28,15 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => 'dev.george.lemish@gmail.com', //xxxx@gmail.com
+                'password' => 'kaskad13',
+                'port' => '587',
+                'encryption' => 'tls',
+            ]
         ],
         'db' => $db,
         'urlManager' => [

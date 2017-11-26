@@ -31,15 +31,16 @@ class ForgetPasswordForm extends \app\classes\Model {
         $transaction = \Yii::$app->db->beginTransaction();
 
         try {
-            $password = \Yii::$app->security->generateRandomString();
+            $password = \Yii::$app->security->generateRandomString(8);
             $user->password = \Yii::$app->security->generatePasswordHash($password);
             if (!$user->save(false)) {
                 throw new \Exception('Не удалось изменить пароль');
             }
 
-            $mail = \Yii::$app->mailer->compose('forget-password')
-                ->setFrom(\Yii::$app->params['systemEmail'])
-                ->setSubject('Восстановление пароля');
+            $mail = \Yii::$app->mailer->compose('new-password', compact('password'));
+            $mail->setFrom(\Yii::$app->params['systemEmail']);
+            $mail->setTo($this->email);
+            $mail->setSubject('Восстановление пароля');
 
             if (!$mail->send()) {
                 throw new \Exception('Не удалось отправить письмо');
